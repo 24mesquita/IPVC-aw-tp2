@@ -1,11 +1,13 @@
+// Description: server.js file
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
-import "dotenv/config";
+import "dotenv/config.js";
 import { routes } from "./routes/index.js";
 import { dbInstance } from "./config/db.js";
 
 // create express app
+//--REST SERVER--//
 const app = express();
 
 // client can be postman | react website | react localhost link | etc
@@ -17,26 +19,30 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// add morgan to log http requests
+// output logs
 app.use(morgan("short"));
 
-// add support to json encoded url
+// middleware
+
+app.use(express.json())
+
+app.use(express.urlencoded({ extended: true }))
+
+
+// parse requests of content-type - application/json
 app.use(express.json());
-//  							 |
-// add support to encoded url
 app.use(express.urlencoded({ extended: true }));
 
-// 										.
+//--ROUTES--//
 app.use("/api", routes);
 
-// Connect to DB
 try {
   dbInstance.sync({ force: false, alter: true });
 } catch (error) {
-  console.info(error);
+  console.log(error);
 }
 
-// Start server
+// correr server no url host:port definido em .env
 app.listen(process.env.SERVER_PORT, process.env.SERVER_HOST, () => {
   console.log(
     "Server up and running at http://%s:%s",

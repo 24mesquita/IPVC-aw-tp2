@@ -24,7 +24,6 @@ export const createUser = async (req, res) => {
     } else {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        // const joinedDate = moment().format('DD/MM/YYYY');
         const newUser = await UserModel.create({ username, password: hashedPassword, email });
 
         // // create and assign a token
@@ -35,11 +34,6 @@ export const createUser = async (req, res) => {
 }
 
 
-// verify if email is valid
-function validateEmail(email) {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}
 
 // get all users and dont show password
 export const getAllUsers = async (req, res) => {
