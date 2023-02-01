@@ -1,36 +1,37 @@
 import { UserModel } from "../models/users.js";
 import bcrypt from 'bcrypt';
+import pkg from 'validator'
+const { isEmail } = pkg // https://www.npmjs.com/package/validator
 
 //create new user, verify if username already exist, if not exist create new user, verify if email is valid, if email is valid create new user, verify if password is valid, if password is valid create new user
 export const createUser = async (req, res) => {
-    const newUser = {
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-    };
-    // verify if name already exist in database
-    const userName = await UserModel.findOne({
-        where: {
-            username: newUser.username
-        }
-    });
-    if (userName) {
-        res.status(400).json('Desculpe, este username já existe');
-        return;
+    const { username, password, email } = req.body;
+    if ( !username || !password || !email) { // Prevent crash if user doesn't fill all fields
+        return res.status(400).send({ message: 'Por favor, preencha todos os campos' });
     }
+    if (!username) {
+        return res.status(400).send({ message: 'Por favor, preencha o campo username' });
+    }
+    const user = await UserModel.findOne({ where: { username: username } }); // Verify if username already exists
+    const userEmail = await UserModel.findOne({ where: { email: email } }); // Verify if email already exists
+    const validEmail = isEmail(email); // Verify if email is valid email 
+    if (user) {
+        return res.status(400).send({ message: 'Este username já está a ser utilizado' });
+    } else if (userEmail) {
+        return res.status(400).send({ message: 'Este email já está a ser utilizado' });
+    } else if (!validEmail) {
+        return res.status(400).send({ message: 'Por favor, introduza um email válido' });
+    } else {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        // const joinedDate = moment().format('DD/MM/YYYY');
+        const newUser = await UserModel.create({ username, password: hashedPassword, email });
 
-    // hash password
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(newUser.password, salt);
-    newUser.password = hash;
+        // // create and assign a token
+        // const token = jwt.sign({ _id: newUser.id }, process.env.TOKEN_SECRET);
 
-    const asd = await UserModel.create(newUser);
-    const { password, ...user } = asd.dataValues;
-
-
-    const token = createToken(user);
-
-    res.send(token);
+        // return res.status(201).send({ newUser, token });
+    }
 }
 
 
