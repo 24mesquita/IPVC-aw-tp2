@@ -31,6 +31,18 @@ const CarsModel = dbInstance.define(
             type: Sequelize.STRING,
             allowNull: false,
         },
+        preco: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        sobre: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        imagem: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
         typeCarId: {
             type: Sequelize.INTEGER,
             allowNull: false,

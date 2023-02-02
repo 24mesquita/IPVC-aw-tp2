@@ -20,4 +20,23 @@ export const getAllCars = async (req, res) => {
     res.status(200).json(cars);
 }
 
+//filtragem de carro por modelo, marca e tipo de carro
+export const getCarsByModel = async (req, res) => {
+    const { modelo, marca, id_typeCar } = req.body;
+    const cars = await CarsModel.findAll({
+        where: {
+            modelo,
+            marca,
+            id_typeCar
+        }
+    });
+    res.status(200).json(cars);
+}
+
+
+
+
+
+
+
 

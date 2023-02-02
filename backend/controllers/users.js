@@ -7,20 +7,21 @@ const { isEmail } = pkg // https://www.npmjs.com/package/validator
 export const createUser = async (req, res) => {
     const { username, password, email } = req.body;
     if ( !username || !password || !email) { // Prevent crash if user doesn't fill all fields
-        return res.status(400).send({ message: 'Por favor, preencha todos os campos' });
+     res.status(400).json('Desculpe, este username já existe')
     }
     if (!username) {
-        return res.status(400).send({ message: 'Por favor, preencha o campo username' });
+        res.status(400).json('Por favor, preencha o campo username')
     }
     const user = await UserModel.findOne({ where: { username: username } }); // Verify if username already exists
     const userEmail = await UserModel.findOne({ where: { email: email } }); // Verify if email already exists
     const validEmail = isEmail(email); // Verify if email is valid email 
     if (user) {
-        return res.status(400).send({ message: 'Este username já está a ser utilizado' });
+        res.status(400).json('Este username já existe')
     } else if (userEmail) {
-        return res.status(400).send({ message: 'Este email já está a ser utilizado' });
+        
+        res.status(400).json('Este email já existe')
     } else if (!validEmail) {
-        return res.status(400).send({ message: 'Por favor, introduza um email válido' });
+        res.status(400).json('Por favor, insira um email válido')
     } else {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -42,7 +43,7 @@ export const getAllUsers = async (req, res) => {
 }
 
 
-export const login = async (req, res) => {
+export const loginUser = async (req, res) => {
     const { username, password } = req.body;
 
     const user = await UserModel.findOne({
@@ -56,7 +57,7 @@ export const login = async (req, res) => {
         if (isValid) {
             const token = createToken({
                 id: user.id,
-                username: user.unsername,
+                username: user.username,
                 isAdmin: user.isAdmin
             });
             res.status(200).json({
@@ -66,10 +67,12 @@ export const login = async (req, res) => {
             });
         }
         else {
-            res.status(401).json('Palavra Passe incorreta');
+            res.status(400).json('Palavra Passe incorreta');
         }
     }
     else {
-        res.status(401).json('username ou Palavra Passe incorreta');
+        res.status(400).json('Username ou Palavra Passe incorreta');
     }
 }
+
+

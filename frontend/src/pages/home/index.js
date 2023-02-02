@@ -39,6 +39,18 @@ export default function ImgMediaCard() {
     const handleFilterSubmit = () => {
       // submit the filter to the backend and update the car list
     };
+
+    //display the cars from getallcars controller
+    const [cars, setCars] = React.useState([]);
+    React.useEffect(() => {
+        fetch('http://localhost:4000/api/cars/getAllCars')
+            .then(res => res.json())
+            .then(data => setCars(data));
+    }, []);
+
+   
+
+
     
   return (
     <>
@@ -86,35 +98,42 @@ export default function ImgMediaCard() {
     
     <Container>
 
-    <Grid container spacing={3}>
+    <Grid container spacing={5}>
+    {cars.map((car, index) => (
         <Grid item xs={6}>
-        <Card sx={{ maxWidth: 345 }}>
-      <CardMedia
-        component="img"
-        height="140"
-        image="/static/images/cards/contemplative-reptile.jpg"
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          Mustang 1965
-        </Typography>
-        <Typography gutterBottom variant="h7" component="div">
-          Ford
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
-        </Typography>
-        <Typography gutterBottom variant="h7" component="div">
-          37.00 €/day
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small">Rent</Button>
-        <Button size="small">See More</Button>
-      </CardActions>
-    </Card>
+      
+        <Card key={index} sx={{ maxWidth: 345 }}>
+          <CardMedia
+            component="img"
+            height="140"
+            image={car.image}
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {car.marca}
+            </Typography>
+            <Typography gutterBottom variant="h7" component="div">
+              {car.modelo} {car.ano}
+            </Typography>
+            <Typography  variant="h7" component="div">
+              {car.matricula}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {car.sobre}
+            </Typography>
+            <Typography gutterBottom variant="h7" component="div">
+              {car.preco} €/day
+            </Typography>
+
+          </CardContent>
+          <CardActions>
+            <Button size="small">Rent</Button>
+            <Button size="small">See More</Button>
+          </CardActions>
+        </Card>
+      
         </Grid>
+        ))}
     </Grid>   
     </Container>
     </>
