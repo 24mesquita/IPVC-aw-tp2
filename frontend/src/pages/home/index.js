@@ -94,8 +94,8 @@ React.useEffect(() => {
     const data = {
       id_car: currentCarId,
       id_user: info.id,
-      data_inicio: DataInicio,
-      data_fim: DataFim,
+      startDate: DataInicio,
+      endDate: DataFim,
     };
     console.log(data);
     fetch("http://localhost:4000/api/rent/createRent", {
@@ -114,7 +114,6 @@ React.useEffect(() => {
   const [selectedAno, setSelectedAno] = React.useState('');
   const [selectedMarca, setSelectedMarca] = React.useState('');
   const [selectedTipo, setSelectedTipo] = React.useState('');
-
 
   const handleChange = () => {
     fetch(`http://localhost:4000/api/cars/getAllcars/filter?ano=${selectedAno}&marca=${selectedMarca}&tipo=${selectedTipo}`)

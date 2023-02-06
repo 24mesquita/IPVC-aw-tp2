@@ -5,17 +5,23 @@ import path from 'path'
 
 // create newt car, verify if matricula already exists
 export const createCar = async (req, res) => {
-    const { matricula, marca, modelo, id_typeCar } = req.body;
-    const car = await CarsModel.findOne({ where: { matricula } });
-    if (car) {
-        res.status(400).json({ message: "Car already exists" });
-    } else {
-        const newCar = await CarsModel.create({ matricula, marca, modelo, id_typeCar });
-        res.status(201).json(newCar);
-    }
+    try {
+        const { matricula, marca, modelo, ano, cor, preco, typeCarId, sobre } = req.body;
+        const carExist = await CarsModel.findOne({ where: { matricula: matricula } })
+        if (carExist) {
+            res.status(400).send({ message: 'Matricula já existe' })
+        } else {
+            const newCar = await CarsModel.create({ matricula, marca, modelo, ano, cor, preco, typeCarId, sobre}) 
+            res.status(201).send({ message: 'Viatura criada com sucesso', newCar })
+        }
+    } catch (error) {   
+        res.status(500).send({ message: 'Error creating car', error: error.message });
+    }   
 }
 
-// 
+
+
+
 
 export const updatePhoto = async (req, res) => {
     try {
@@ -39,23 +45,36 @@ export const updatePhoto = async (req, res) => {
 
 
 
-// get all cars
+// get all cars from database if filter is empty, if not get cars by filter
 export const getAllCars = async (req, res) => {
-        const cars = await CarsModel.findAll();
-        res.status(200).json(cars);
-        console.log(cars);
+    try {
+        const { filter } = req.query
+        if (filter) {
+            const cars = await CarsModel.findAll({
+                where: {
+                    marca: filter
+                },
+                include: {
+                    model: TypeCarModel,
+                    as: 'typeCar'
+                }
+            })
+            res.status(200).send(cars)
+        } else {
+            const cars = await CarsModel.findAll({
+                include: {
+                    model: TypeCarModel,
+                    as: 'typeCar'
+                }
+            })
+            res.status(200).send(cars)
+        }
+    } catch (error) {
+        res.status(500).send({ message: 'Error getting cars', error: error.message });
     }
-
-//  Image Upload
-
-
-//filter cars 
-export const filterCars = async (req, res) => {
-    const { marca, modelo, ano, cor, preco, id_typeCar } = req.body;
-    const cars = await CarsModel.findAll({ where: { marca, modelo, ano, cor, preco, id_typeCar } });
-    res.status(200).json(cars);
-    console.log(cars);
 }
+
+
 
 
 // Set up storage engine for multer

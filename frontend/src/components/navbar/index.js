@@ -24,16 +24,9 @@ const navItems = ['Home', 'Cars Rented'];
 export default function Navbar(props) {
   
   const token = localStorage.getItem('token');
-  const [isAdmin, setIsAdmin] = useState(false);
-  //if the user is admin set the isAdmin value to true
+  const decoded = jwt_decode(token);
 
-
-
-
-
-  
-  
-  //get the isAdmin value from the token
+    const [isAdmin, setIsAdmin] = useState(decoded.isAdmin);
 
   
   const { window } = props;

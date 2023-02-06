@@ -14,11 +14,11 @@ const RentModel = dbInstance.define(
         },
 
         startDate: {
-            type: Sequelize.STRING,
+            type: Sequelize.DATE,
             defaultValue: moment.utc().format('YYYY-MM-DD'),
         },
         endDate: {
-            type: Sequelize.STRING,
+            type: Sequelize.DATE,
             defaultValue: moment.utc().format('YYYY-MM-DD'),
         },
 
