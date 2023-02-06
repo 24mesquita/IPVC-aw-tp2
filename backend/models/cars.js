@@ -41,7 +41,7 @@ const CarsModel = dbInstance.define(
         },
         imagem: {
             type: Sequelize.STRING,
-            allowNull: false,
+            defaultValue:'default.png',
         },
         typeCarId: {
             type: Sequelize.INTEGER,

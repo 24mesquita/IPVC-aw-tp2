@@ -19,7 +19,7 @@ import jwt_decode from 'jwt-decode';
 
 
 const drawerWidth = 240;
-const navItems = ['Home', 'Cars Rented'];
+const navItems = ['Home', 'Cars', 'About', 'Contact'];
 
 export default function Navbar(props) {
   
@@ -82,19 +82,11 @@ export default function Navbar(props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            Car Rental
+            Admin Dashboard
           </Typography>
 
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          {isAdmin ? (
-              <button>Admin Button</button>
-           ) : null}
-            {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#fff',
-           border:'1px solid #fff', margin:'10px' }}>
-                {item}
-              </Button>
-            ))}
+
           </Box>
         </Toolbar>
       </AppBar>
@@ -113,6 +105,7 @@ export default function Navbar(props) {
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
+          
           {drawer}
         </Drawer>
       </Box>

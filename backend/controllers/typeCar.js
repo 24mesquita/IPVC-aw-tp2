@@ -1,5 +1,6 @@
 import { TypeCarModel  } from "../models/typeCar.js";
 
+
 // create new typecar, verify if name already exists
 export const createTypeCar = async (req, res) => {
     const { description } = req.body;
@@ -10,6 +11,12 @@ export const createTypeCar = async (req, res) => {
         const newTypeCar = await TypeCarModel.create({ description });
         res.status(201).json(newTypeCar);
     }
+}
+
+// get all brands
+export const getAllTypeCars = async (req, res) => {
+    const typeCars = await TypeCarModel.findAll();
+    res.status(200).json(typeCars);
 }
 
 

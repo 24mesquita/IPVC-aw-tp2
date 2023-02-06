@@ -5,40 +5,42 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Navbar from '../../components/navbar/index.js';
+import Navbar from '../../components/navbar';
 import { Container } from '@mui/system';
 import Grid from '@mui/material/Grid';
-
-
-import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
 
 
-export default function ImgMediaCard() {
 
 
-    const [year, setYear] = React.useState('');
-    const [label, setLabel] = React.useState('');
-    const [model, setModel] = React.useState('');
-  
-    const handleYearChange = (event) => {
-      setYear(event.target.value);
-    };
-  
-    const handleLabelChange = (event) => {
-      setLabel(event.target.value);
-    };
-  
-    const handleModelChange = (event) => {
-      setModel(event.target.value);
-    };
-  
-    const handleFilterSubmit = () => {
-      // submit the filter to the backend and update the car list
-    };
+export default function Homepage() {
+
+
+
+
+
+  const [info, setUserInfo] = useState({});
+  const navigate = useNavigate();
+
+  useEffect(() => {//verify if user is logged in
+    const hasToken = localStorage.getItem("token");//get token from local storage
+    if (hasToken) {
+      const info = jwtDecode(hasToken);
+      setUserInfo(info);
+      console.log(info.id);
+    } else {
+      navigate("/");
+    }
+  }, [navigate]);
 
     //display the cars from getallcars controller
     const [cars, setCars] = React.useState([]);
@@ -46,50 +48,139 @@ export default function ImgMediaCard() {
         fetch('http://localhost:4000/api/cars/getAllCars')
             .then(res => res.json())
             .then(data => setCars(data));
+
     }, []);
 
-   
+    //display the brands from getallbrands controller
+    const [brands, setBrands] = React.useState([]);
+    React.useEffect(() => {
+        fetch('http://localhost:4000/api/brands/getAllBrands')
+            .then(res => res.json())
+            .then(data => setBrands(data));
+    }, []);
+
+const [typeCars, setTypeCars] = React.useState([]);
+React.useEffect(() => {
+  fetch('http://localhost:4000/api/typeCar/getAllTypeCars')
+    .then(res => res.json())
+    .then(data => setTypeCars(data)); 
+}, []);
+
+  const [numbers, setNumbers] = useState([]);
+
+  useEffect(() => {
+    const arr = [];
+    for (let i = 1980; i <= 2023; i++) {
+      arr.push(i);
+    }
+    setNumbers(arr);
+  }, []);
 
 
-    
+  const [currentCarId, setCurrentCarId] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => setOpen(false);
+  const handleOpen = (id) => {
+    setCurrentCarId(id);
+    setOpen(true);
+  };
+
+  const [DataInicio, setDataInicio] = useState("");
+  const [DataFim, setDataFim] = useState("");
+
+
+//send data to rent controller
+  const handleRent = () => {
+    const data = {
+      id_car: currentCarId,
+      id_user: info.id,
+      data_inicio: DataInicio,
+      data_fim: DataFim,
+    };
+    console.log(data);
+    fetch("http://localhost:4000/api/rent/createRent", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(data),
+    })
+
+      .then((res) => res.json())
+  };
+
+
+  const [selectedAno, setSelectedAno] = React.useState('');
+  const [selectedMarca, setSelectedMarca] = React.useState('');
+  const [selectedTipo, setSelectedTipo] = React.useState('');
+
+
+  const handleChange = () => {
+    fetch(`http://localhost:4000/api/cars/getAllcars/filter?ano=${selectedAno}&marca=${selectedMarca}&tipo=${selectedTipo}`)
+      .then(res => res.json())
+      .then(data => setCars(data));
+  }
+
   return (
     <>
-   
     <Navbar />
    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', textAlign:'center', marginTop:'55px' }}>
       <form style={{ width: '100%' }} noValidate autoComplete="off">
-        <TextField
-          id="year"
-          label="Year"
-          value={year}
-          onChange={handleYearChange}
-          style={{ margin: '16px' }}
-        />
-        <FormControl style={{ margin: '16px', minWidth: '120px' }}>
-          <InputLabel id="label">Label</InputLabel>
+      <FormControl style={{ margin: '16px', minWidth: '120px' }}>
+          <InputLabel id="label">Ano</InputLabel>
           <Select
+          value={selectedAno}
+          onChange={e => setSelectedAno(e.target.value)}
             labelId="label"
             id="label-select"
-            value={label}
-            onChange={handleLabelChange}
+   name='ano'
             style={{ width: '100%' }}
           >
-            <MenuItem value="">
-              <em>None</em>
+     {numbers.map((number) => (
+            <MenuItem key={number} value={number} >
+              <em>{number}</em>
             </MenuItem>
-            <MenuItem value="bmw">BMW</MenuItem>
-            <MenuItem value="audi">Audi</MenuItem>
-            <MenuItem value="mercedes">Mercedes</MenuItem>
+     ))}
           </Select>
         </FormControl>
-        <TextField
-          id="model"
-          label="Model"
-          value={model}
-          onChange={handleModelChange}
-          style={{ margin: '16px' }}
-        />
-        <Button variant="contained" color="primary" onClick={handleFilterSubmit} style={{ margin: '16px' }}>
+        <FormControl style={{ margin: '16px', minWidth: '120px' }}>
+          <InputLabel id="label">Marca</InputLabel>
+          <Select
+          value={selectedMarca}
+          onChange={e => setSelectedMarca(e.target.value)}
+            labelId="label"
+            id="label-select"
+   name='marca'
+
+            style={{ width: '100%' }}
+          >
+            {brands.map((brand, index) => (
+            <MenuItem value={brand.nome_marca} key={index}>
+              <em>{brand.nome_marca} </em>
+            </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl style={{ margin: '16px', minWidth: '120px' }}>
+  <InputLabel id="label">Tipo do carro</InputLabel>
+  <Select
+  name='tipo'
+    labelId="label"
+    id="label-select"
+    style={{ width: '100%' }}
+
+    value={selectedTipo}
+    onChange={e => setSelectedTipo(e.target.value)}
+  >
+    {typeCars.map((typeCar, index) => (
+    <MenuItem value={typeCar.description} key={index}>
+      <em>{typeCar.description}</em>
+    </MenuItem>
+    ))}
+  </Select>
+</FormControl>
+        <Button onClick={handleChange} variant="contained" color="primary"  style={{ margin: '16px' }}>
           Filter
         </Button>
       </form>
@@ -100,14 +191,18 @@ export default function ImgMediaCard() {
 
     <Grid container spacing={5}>
     {cars.map((car, index) => (
-        <Grid item xs={6}>
+        <Grid item xs={4}>
       
-        <Card key={index} sx={{ maxWidth: 345 }}>
+        <Card key={car.id} sx={{ maxWidth: 345 }}>
           <CardMedia
             component="img"
             height="140"
-            image={car.image}
+            //get default image from uploads folder
+            image={"http://localhost:4000/default.png}"}
+
+
           />
+
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {car.marca}
@@ -127,15 +222,47 @@ export default function ImgMediaCard() {
 
           </CardContent>
           <CardActions>
-            <Button size="small">Rent</Button>
-            <Button size="small">See More</Button>
+            <Button size="small" onClick={() => handleOpen(car.id)}>Rent</Button>
           </CardActions>
         </Card>
-      
-        </Grid>
+    </Grid>
+
+        
         ))}
     </Grid>   
+
     </Container>
+
+<Modal
+  open={open}
+  onClose={handleClose}
+>
+  <div style={{ backgroundColor: 'white', padding: '32px', margin:'20px', display:'flex' }}>
+    <TextField
+        id="date"
+        label="Data Inicio"
+        type="date"
+        defaultValue="2017-05-24"
+        sx={{ width: 220, marginRight: '16px' }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        onChange={(e) => setDataInicio(e.target.value)}
+      />
+      <TextField
+        id="date"
+        label="Data Fim"
+        type="date"
+        defaultValue="2017-05-24"
+        sx={{ width: 220 }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        onChange={(e) => setDataFim(e.target.value)}
+      />
+      <Button variant="contained" color="primary" onClick={handleRent} sx={{marginLeft: '5%'}} >Alugar</Button>
+  </div>
+</Modal>
     </>
   );
 }

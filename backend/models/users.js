@@ -10,7 +10,7 @@ const UserModel = dbInstance.define(
             primaryKey: true,
         },
         isAdmin: {
-            type: Sequelize.BOOLEAN,
+            type: Sequelize.STRING,
             defaultValue: false,
         },
         username: {

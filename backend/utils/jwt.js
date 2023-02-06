@@ -13,6 +13,9 @@ export const authRequired = (req, res, next) => {
     /**Get the Token value from the header, normaly its in a format like: 'Bearer xxxxxx' */
     const token = authHeader && authHeader.split(" ")[1];
 
+    //get the admin value from the token
+    const decodedToken = jwt_decode(token);
+
     /**If the token is null, it will return a 401 status code*/
     if (token == null) return res.sendStatus(401);
 

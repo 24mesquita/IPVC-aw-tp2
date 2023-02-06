@@ -2,6 +2,7 @@ import { UserModel } from "../models/users.js";
 import bcrypt from 'bcrypt';
 import pkg from 'validator'
 const { isEmail } = pkg // https://www.npmjs.com/package/validator
+import { createToken } from "../utils/jwt.js";
 
 //create new user, verify if username already exist, if not exist create new user, verify if email is valid, if email is valid create new user, verify if password is valid, if password is valid create new user
 export const createUser = async (req, res) => {
@@ -27,10 +28,10 @@ export const createUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
         const newUser = await UserModel.create({ username, password: hashedPassword, email });
 
-        // // create and assign a token
-        // const token = jwt.sign({ _id: newUser.id }, process.env.TOKEN_SECRET);
+        // create and assign a token
+   const token = jwt.sign({ _id: newUser.id }, process.env.TOKEN_SECRET);
 
-        // return res.status(201).send({ newUser, token });
+ return res.status(201).send({ newUser, token });
     }
 }
 

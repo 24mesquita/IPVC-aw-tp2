@@ -37,6 +37,7 @@ export default function Login() {
         };
         
         await axios.post("http://localhost:4000/api/users/loginUser", login).then((res) => {
+            localStorage.setItem("token", res.data.token);
             navigate("/home");
      
         })
