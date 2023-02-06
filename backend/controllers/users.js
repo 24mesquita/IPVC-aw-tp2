@@ -29,7 +29,7 @@ export const createUser = async (req, res) => {
         const newUser = await UserModel.create({ username, password: hashedPassword, email });
 
         // create and assign a token
-   const token = jwt.sign({ _id: newUser.id }, process.env.TOKEN_SECRET);
+//    const token = jwt.sign({ _id: newUser.id }, process.env.TOKEN_SECRET);
 
  return res.status(201).send({ newUser, token });
     }
