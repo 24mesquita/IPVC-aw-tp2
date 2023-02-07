@@ -14,13 +14,14 @@ import { Typography } from '@mui/material';
 
 
 export default function AllCars() {
-  //get all cars from database
-  const [cars, setCars] = React.useState([]);
-  React.useEffect(() => {
-      fetch('http://localhost:4000/api/cars/getAllCars')
-          .then(res => res.json())
-          .then(data => setCars(data));
-  }, []);
+  //get all rents from database
+    const [rents, setRents] = React.useState([]);
+    React.useEffect(() => {
+        fetch('http://localhost:4000/api/rent/getAllRents')
+            .then(res => res.json())
+            .then(data => setRents(data));
+    }, []);
+
 
 
     return(
@@ -29,38 +30,35 @@ export default function AllCars() {
 
 <Typography sx={{marginTop:'80px',
 marginLeft:'20px',
-fontSize:'30px'}}>All Cars</Typography>
+fontSize:'30px'}}>All Rents</Typography>
 
         <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell >Id_Car</TableCell>
-              <TableCell >Matricula</TableCell>
-              <TableCell >Marca</TableCell>
-              <TableCell >Modelo</TableCell>
-              <TableCell >Ano</TableCell>
-              <TableCell >Cor</TableCell>
-              <TableCell >Preço</TableCell>
-              <TableCell >Sobre</TableCell>
+                <TableCell >Id_Rent</TableCell>
+                <TableCell >Matricula</TableCell>
+                <TableCell >Marca</TableCell>
+                <TableCell >Nome de Utilizador</TableCell>
+                <TableCell >Data de Inicio</TableCell>
+                <TableCell >Data de fim</TableCell>
+
             </TableRow>
           </TableHead>
           <TableBody>
-            {cars.map((car) => (
+            {rents.map((rent) => (
               <TableRow
-                key={car.id}
+                key={rent.id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {car.id}
+                  {rent.id}
                 </TableCell>
-                <TableCell >{car.matricula}</TableCell>
-                <TableCell >{car.marca}</TableCell>
-                <TableCell >{car.modelo}</TableCell>
-                <TableCell >{car.ano}</TableCell>
-                <TableCell >{car.cor}</TableCell>
-                <TableCell >{car.preco}</TableCell>
-                <TableCell sx={{width:'10%'}}>{car.sobre}</TableCell>
+                <TableCell >{rent.car.matricula}</TableCell>
+                <TableCell >{rent.car.marca}</TableCell>
+                <TableCell >{rent.user.username}</TableCell>
+                <TableCell >{rent.startDate}</TableCell>
+                <TableCell >{rent.endDate}</TableCell>
               </TableRow>
             ))}
           </TableBody>

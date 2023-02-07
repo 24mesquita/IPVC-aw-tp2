@@ -3,6 +3,9 @@ import {TypeCarModel} from '../models/typeCar.js';
 import multer from 'multer';
 import path from 'path'
 
+
+
+
 // create newt car, verify if matricula already exists
 export const createCar = async (req, res) => {
     try {
@@ -19,6 +22,21 @@ export const createCar = async (req, res) => {
     }   
 }
 
+// delete car by id
+export const deleteCar = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const carExist = await CarsModel.findOne({ where: { id: id } })
+        if (carExist) {
+            await CarsModel.destroy({ where: { id: id } });
+            res.status(200).send({ message: 'Viatura eliminada com sucesso' })
+        } else {
+            res.status(404).send({ message: 'Viatura não encontrada' })
+        }
+    } catch (error) {
+        res.status(500).send({ message: 'Error deleting car', error: error.message });
+    }
+}
 
 
 
@@ -48,31 +66,29 @@ export const updatePhoto = async (req, res) => {
 // get all cars from database if filter is empty, if not get cars by filter
 export const getAllCars = async (req, res) => {
     try {
-        const { filter } = req.query
-        if (filter) {
-            const cars = await CarsModel.findAll({
-                where: {
-                    marca: filter
-                },
-                include: {
-                    model: TypeCarModel,
-                    as: 'typeCar'
-                }
-            })
-            res.status(200).send(cars)
-        } else {
-            const cars = await CarsModel.findAll({
-                include: {
-                    model: TypeCarModel,
-                    as: 'typeCar'
-                }
-            })
-            res.status(200).send(cars)
+        const { tipo, marca, ano } = req.params
+        let cars = await CarsModel.findAll({
+            include: {
+                model: TypeCarModel,
+                as: 'typeCar'
+            }
+        });
+        if (tipo) {
+            cars = cars.filter(car => car.typeCarId === type);
         }
+        if (marca) {
+            cars = cars.filter(car => car.marca === marca);
+        }
+        if (ano) {
+            cars = cars.filter(car => car.ano === ano);
+        }
+        res.status(200).send(cars)
     } catch (error) {
         res.status(500).send({ message: 'Error getting cars', error: error.message });
     }
 }
+
+
 
 
 
@@ -104,3 +120,5 @@ export const upload = multer({
         cb('Give proper files formate to upload')
     }
 }).single('imagem')
+
+

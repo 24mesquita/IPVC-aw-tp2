@@ -28,21 +28,34 @@ export const createUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
         const newUser = await UserModel.create({ username, password: hashedPassword, email });
 
-        // create and assign a token
-//    const token = jwt.sign({ _id: newUser.id }, process.env.TOKEN_SECRET);
+    
+   const token = jwt.sign({ _id: newUser.id }, process.env.TOKEN_SECRET);
 
  return res.status(201).send({ newUser, token });
     }
 }
 
+//create new user 
+export const createUser_admin = async (req, res) => {
+    const { username, password, email, isAdmin } = req.body;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const newUser = await UserModel.create({ username, password: hashedPassword, email, isAdmin });
+    res.status(201).send({ message: "User created successfully", newUser });
+}
 
+//delete user by id
+export const deleteUser = async (req, res) => {
+    const { id } = req.params;
+    const user = await UserModel.destroy({ where: { id: id } });
+    res.status(200).json({ message: "User deleted successfully", user });
+}
 
 // get all users and dont show password
 export const getAllUsers = async (req, res) => {
     const users = await UserModel.findAll({ attributes: { exclude: ['password'] } });
     res.status(200).json(users);
 }
-
 
 export const loginUser = async (req, res) => {
     const { username, password } = req.body;

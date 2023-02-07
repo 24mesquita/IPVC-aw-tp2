@@ -15,18 +15,37 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
 import jwt_decode from 'jwt-decode';
+import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
 
 
 
-const drawerWidth = 240;
-const navItems = ['Home', 'Cars Rented'];
+
 
 export default function Navbar(props) {
-  
-  const token = localStorage.getItem('token');
-  const decoded = jwt_decode(token);
+  const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
 
-    const [isAdmin, setIsAdmin] = useState(decoded.isAdmin);
+  const checkAdmin = () => {
+    const hasToken = localStorage.getItem("token");//get token from local storage
+    if (hasToken) {
+        const info = jwt_decode(hasToken);
+        if (info.isAdmin == true) {
+          setIsAdmin(true);
+        }else{
+          setIsAdmin(false);
+        }
+    } else {
+        navigate("/");
+  }}
+  
+
+
+
+useEffect(() => {
+  checkAdmin();
+}, []);
+
 
   
   const { window } = props;
@@ -36,25 +55,18 @@ export default function Navbar(props) {
     setMobileOpen((prevState) => !prevState);
   };
 
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        Car Rental
-      </Typography>
-      <Divider />
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
 
   const container = window !== undefined ? () => window().document.body : undefined;
+
+  const go_admin = () => {
+    navigate("/admin/Admin_all_cars");
+  };
+  const cars_rented = () => {
+    navigate("/user_rent");
+  };
+  const go_home = () => {
+    navigate("/home");
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -80,35 +92,23 @@ export default function Navbar(props) {
 
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
           {isAdmin ? (
-              <button>Admin Button</button>
+              <button onClick={go_admin}>Admin Button</button>
            ) : null}
-            {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#fff',
-           border:'1px solid #fff', margin:'10px' }}>
-                {item}
+     
+              <Button  sx={{ color: '#fff',
+           border:'1px solid #fff', margin:'10px' }}
+           onClick={go_home}>
+                Home
               </Button>
-            ))}
+              <Button  sx={{ color: '#fff',
+           border:'1px solid #fff', margin:'10px' }}
+           onClick={cars_rented}>
+                Cars Rented
+              </Button>
+      
           </Box>
         </Toolbar>
       </AppBar>
-      <Box component="nav">
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            border: '1px solid #000',
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
-      </Box>
     </Box>
   );
 }

@@ -16,18 +16,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
+import { Modal } from '@mui/material';
+//import defaultcar_img from '../../uploads';
+
 
 
 
 
 export default function Homepage() {
-
-
-
-
-
   const [info, setUserInfo] = useState({});
   const navigate = useNavigate();
 
@@ -40,7 +36,7 @@ export default function Homepage() {
     } else {
       navigate("/");
     }
-  }, [navigate]);
+  }, []);
 
     //display the cars from getallcars controller
     const [cars, setCars] = React.useState([]);
@@ -125,8 +121,10 @@ React.useEffect(() => {
     <>
     <Navbar />
    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', textAlign:'center', marginTop:'55px' }}>
+      
       <form style={{ width: '100%' }} noValidate autoComplete="off">
       <FormControl style={{ margin: '16px', minWidth: '120px' }}>
+       
           <InputLabel id="label">Ano</InputLabel>
           <Select
           value={selectedAno}
@@ -148,9 +146,9 @@ React.useEffect(() => {
           <Select
           value={selectedMarca}
           onChange={e => setSelectedMarca(e.target.value)}
-            labelId="label"
-            id="label-select"
-   name='marca'
+          labelId="label"
+          id="label-select"
+          name='marca'
 
             style={{ width: '100%' }}
           >
@@ -188,23 +186,25 @@ React.useEffect(() => {
     
     <Container>
 
+
+
     <Grid container spacing={5}>
     {cars.map((car, index) => (
-        <Grid item xs={4}>
+        <Grid key={car.id} item xs={4}  >
       
-        <Card key={car.id} sx={{ maxWidth: 345 }}>
+        <Card sx={{ maxWidth: 345 }}>
           <CardMedia
             component="img"
             height="140"
-            //get default image from uploads folder
-            image={"http://localhost:4000/default.png}"}
-
+            //get image from database from uploads folder
+           // src={require(../../uploads/{car.imagem})}
+            src={require('../../uploads/'+ car.imagem)}
 
           />
-
-          <CardContent>
+        <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {car.marca}
+              
             </Typography>
             <Typography gutterBottom variant="h7" component="div">
               {car.modelo} {car.ano}
@@ -224,11 +224,18 @@ React.useEffect(() => {
             <Button size="small" onClick={() => handleOpen(car.id)}>Rent</Button>
           </CardActions>
         </Card>
+       {/* <img src={require('../../uploads/' + car.imagem)}> </img> */}
+
     </Grid>
 
-        
+
         ))}
+
     </Grid>   
+        
+
+
+
 
     </Container>
 
@@ -241,7 +248,8 @@ React.useEffect(() => {
         id="date"
         label="Data Inicio"
         type="date"
-        defaultValue="2017-05-24"
+        format="yyyy/MM/dd"
+        defaultValue="2023-01-01"
         sx={{ width: 220, marginRight: '16px' }}
         InputLabelProps={{
           shrink: true,
@@ -249,10 +257,11 @@ React.useEffect(() => {
         onChange={(e) => setDataInicio(e.target.value)}
       />
       <TextField
+      format="yyyy/MM/dd"
         id="date"
         label="Data Fim"
         type="date"
-        defaultValue="2017-05-24"
+        defaultValue="2023-01-01"
         sx={{ width: 220 }}
         InputLabelProps={{
           shrink: true,

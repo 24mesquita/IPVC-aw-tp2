@@ -15,24 +15,50 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
 import jwt_decode from 'jwt-decode';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { useNavigate } from "react-router-dom";
+
+
 
 
 
 const drawerWidth = 240;
-const navItems = ['Home', 'Cars', 'About', 'Contact'];
+
+
+
+
 
 export default function Navbar(props) {
   
   const token = localStorage.getItem('token');
   const [isAdmin, setIsAdmin] = useState(false);
+  const navigate = useNavigate();
   //if the user is admin set the isAdmin value to true
 
+const see_all_cars = () => {
+    navigate("/admin/Admin_all_cars");
+};
+const see_all_users = () => {
+  navigate("/admin/Admin_all_users");
+};
+const add_user = () => {
+  navigate("/admin/Admin_create_user");
+};
+const del_user = () => {
+  navigate("/admin/Admin_delete_user");
+};
+const add_car = () => {
+  navigate("/admin/Admin_create_car");
+};
+const back = () => {
+  navigate("/home");
+};
+const all_rents = () => {
+  navigate("/admin/Admin_all_rents");
+};
 
-
-
-
-  
-  
   //get the isAdmin value from the token
 
   
@@ -50,13 +76,7 @@ export default function Navbar(props) {
       </Typography>
       <Divider />
       <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+      <button>dasd</button>
       </List>
     </Box>
   );
@@ -86,6 +106,52 @@ export default function Navbar(props) {
           </Typography>
 
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            <PopupState variant="popover" popupId="demo-popup-menu">
+      {(popupState) => (
+        <React.Fragment>
+          <Button variant="filled" {...bindTrigger(popupState)}>
+            Cars
+          </Button>
+          <Menu {...bindMenu(popupState)}>
+            <MenuItem onClick={see_all_cars}>See all cars</MenuItem>
+            <MenuItem onClick={add_car}>Add cars</MenuItem>
+            <MenuItem onClick={see_all_users}>Delete cars</MenuItem>
+          </Menu>
+        </React.Fragment>
+      )}
+    </PopupState>
+
+    <PopupState variant="popover" popupId="demo-popup-menu">
+      {(popupState) => (
+        <React.Fragment>
+          <Button variant="filled" {...bindTrigger(popupState)}>
+            Users
+          </Button>
+          <Menu {...bindMenu(popupState)}>
+            <MenuItem onClick={see_all_users}>See all users</MenuItem>
+            <MenuItem onClick={add_user}>Add users</MenuItem>
+            <MenuItem onClick={del_user}>Delete users</MenuItem>
+          </Menu>
+        </React.Fragment>
+      )}
+    </PopupState>
+
+    <PopupState variant="popover" popupId="demo-popup-menu">
+      {(popupState) => (
+        <React.Fragment>
+          <Button variant="filled" {...bindTrigger(popupState)}>
+            Rents
+          </Button>
+          <Menu {...bindMenu(popupState)}>
+            <MenuItem onClick={all_rents}>See rents</MenuItem>
+     
+          </Menu>
+        </React.Fragment>
+      )}
+    </PopupState>
+
+    <Button onClick={back}variant="filled" >Back to Home page</Button>
+       
 
           </Box>
         </Toolbar>
@@ -107,6 +173,7 @@ export default function Navbar(props) {
         >
           
           {drawer}
+          <button>dasd</button>
         </Drawer>
       </Box>
     </Box>
