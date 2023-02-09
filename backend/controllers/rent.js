@@ -33,7 +33,7 @@ export const createRent = async (req, res) => {
                 }
             })
             if (rentExist.length > 0) {
-                res.status(400).send({ message: 'Carro não disponível' })
+                res.status(400).json({ message: 'Carro não disponível' })
             } else {
                 const newRent = await RentModel.create({
                     id_car,
@@ -41,13 +41,13 @@ export const createRent = async (req, res) => {
                     startDate,
                     endDate,
                 });
-                res.status(201).send({ message: "Aluguer criado com sucesso", newRent });
+                res.status(200).json({ message: "Aluguer criado com sucesso", newRent });
             }
         } else {
-            res.status(404).send({ message: 'Carro não existe' })
+            res.status(400).json({ message: 'Carro não existe' })
         }
     } catch (error) {
-        res.status(500).send({ message: "Error creating rent", error: error.message });
+        res.status(500).json({ message: "Error creating rent", error: error.message });
     }
 }
 
@@ -96,3 +96,18 @@ export const getAllRentsUser = async (req, res) => {
     }
 }
 
+//delete rent
+export const deleteRent = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const rent = await RentModel.findOne({ where: { id } });
+        if (rent) {
+            await RentModel.destroy({ where: { id } });
+            res.status(200).send({ message: "Aluguer eliminado com sucesso" });
+        } else {
+            res.status(404).send({ message: "Aluguer não encontrado" });
+        }
+    } catch (error) {
+        res.status(500).send({ message: "Error deleting rent", error: error.message });
+    }
+}

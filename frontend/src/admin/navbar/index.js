@@ -59,6 +59,10 @@ const all_rents = () => {
   navigate("/admin/Admin_all_rents");
 };
 
+const del_car = () => {
+  navigate("/admin/Admin_delete_car");
+};
+
   //get the isAdmin value from the token
 
   
@@ -115,7 +119,7 @@ const all_rents = () => {
           <Menu {...bindMenu(popupState)}>
             <MenuItem onClick={see_all_cars}>See all cars</MenuItem>
             <MenuItem onClick={add_car}>Add cars</MenuItem>
-            <MenuItem onClick={see_all_users}>Delete cars</MenuItem>
+            <MenuItem onClick={del_car}>Delete cars</MenuItem>
           </Menu>
         </React.Fragment>
       )}

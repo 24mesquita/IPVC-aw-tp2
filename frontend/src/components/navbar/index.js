@@ -40,7 +40,11 @@ export default function Navbar(props) {
   }}
   
 
-
+//logout user
+const logout = () => {
+  localStorage.removeItem("token");
+  navigate("/");
+};
 
 useEffect(() => {
   checkAdmin();
@@ -104,6 +108,12 @@ useEffect(() => {
            border:'1px solid #fff', margin:'10px' }}
            onClick={cars_rented}>
                 Cars Rented
+              </Button>
+
+              <Button  sx={{ color: 'red',
+           border:'1px solid red', margin:'10px' }}
+           onClick={logout}>
+                LogOut
               </Button>
       
           </Box>

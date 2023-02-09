@@ -17,9 +17,14 @@ import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import TextField from '@mui/material/TextField';
 import { Modal } from '@mui/material';
+import {
+  Snackbar,
+  Alert
+  } from "@mui/material";
+
 //import defaultcar_img from '../../uploads';
 
-
+      
 
 
 
@@ -84,6 +89,8 @@ React.useEffect(() => {
   const [DataInicio, setDataInicio] = useState("");
   const [DataFim, setDataFim] = useState("");
 
+  const [openToast1, setOpenToast1] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
 
 //send data to rent controller
   const handleRent = () => {
@@ -99,12 +106,11 @@ React.useEffect(() => {
       headers: {
         "Content-Type": "application/json",
       },
-
       body: JSON.stringify(data),
-    })
 
-      .then((res) => res.json())
-  };
+    } 
+    )
+  }
 
 
   const [selectedAno, setSelectedAno] = React.useState('');
@@ -238,6 +244,12 @@ React.useEffect(() => {
 
 
     </Container>
+
+    <Snackbar open={openToast1} autoHideDuration={2000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+          {errorMessage}
+        </Alert>
+    </Snackbar>
 
 <Modal
   open={open}

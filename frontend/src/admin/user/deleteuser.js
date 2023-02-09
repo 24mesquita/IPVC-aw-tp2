@@ -49,17 +49,6 @@ export default function Login() {
 
 
       
-      // e.preventDefault();
-      // await axios.delete(`http://localhost:4000/api/users/deleteUser/${id}`)
-      // .then((res) => {
-      //     navigate("/admin/Admin_delete_user");
-      // })
-      // .catch((err) => {
-      //     if (err.response.status === 400) {
-      //         setErrorMessage(err.response.data);
-      //         setOpenToast1(true);
-      //     }
-      // });
 
   
 

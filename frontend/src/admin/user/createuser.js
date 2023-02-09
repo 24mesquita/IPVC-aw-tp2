@@ -27,9 +27,6 @@ export default function Login() {
     const navigate = useNavigate();
     const [openToast1, setOpenToast1] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const handleRegister = () => {
-        navigate("/register");
-    };
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -45,13 +42,15 @@ export default function Login() {
             email: email,
             isAdmin: isAdmin
         };
-             await axios.post("http://localhost:4000/api/users/createUser_admin", newUser).then((res) => {
+             await axios.post("http://localhost:4000/api/users/createUser", newUser).then((res) => {
                   navigate("/admin/Admin_create_user");
+                  alert("User created successfully");
               })
               .catch((err) => {
                 if (err.response.status === 400) {
-                    setErrorMessage(err.response.data);
-                  setOpenToast1(true);
+                  alert("User already exists");
+                }else{
+                alert("Error creating user");
                 }
               });
         };
@@ -102,10 +101,10 @@ export default function Login() {
             style={{ width: '100%' }}
           >
  
-            <MenuItem  value="false" >
+            <MenuItem  value='0' >
               <em>False</em>
             </MenuItem>
-            <MenuItem  value="true" >
+            <MenuItem  value='1' >
               <em>True</em>
             </MenuItem>
 
@@ -118,7 +117,7 @@ export default function Login() {
     width: '80%',
     backgroundColor: '#000',
 }}
-onClick={handleSubmit}
+onClick={handleSubmit()}
 variant="contained">
     Create User</Button>
 

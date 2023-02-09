@@ -50,7 +50,7 @@ const handleSubmit = async (e) => {
               navigate("/");
           })
           .catch((err) => {
-            if (err.response.status === 400) {
+            if (err.status === 400) {
                 setErrorMessage(err.response.data);
               setOpenToast1(true);
             }

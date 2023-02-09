@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import pkg from 'validator'
 const { isEmail } = pkg // https://www.npmjs.com/package/validator
 import { createToken } from "../utils/jwt.js";
+import jwt from 'jsonwebtoken';
+
 
 //create new user, verify if username already exist, if not exist create new user, verify if email is valid, if email is valid create new user, verify if password is valid, if password is valid create new user
 export const createUser = async (req, res) => {
@@ -87,6 +89,12 @@ export const loginUser = async (req, res) => {
     else {
         res.status(400).json('Username ou Palavra Passe incorreta');
     }
+}
+
+
+//logout user
+export const logoutUser = async (req, res) => {
+    res.status(200).json({ message: "Logout successful" });
 }
 
 

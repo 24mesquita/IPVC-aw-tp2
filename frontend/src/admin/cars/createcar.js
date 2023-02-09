@@ -18,6 +18,8 @@ import { Grid } from '@mui/material';
 import { MenuItem } from '@mui/material';
 import Navbar_admin from '../navbar';
 import { useEffect } from 'react';
+import preventDefault from '@mui/material/';  
+
 
 
 
@@ -36,9 +38,6 @@ export default function Create_car() {
     const navigate = useNavigate();
     const [openToast1, setOpenToast1] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const handleRegister = () => {
-        navigate("/register");
-    };
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -47,6 +46,36 @@ export default function Create_car() {
         }
     };
 
+
+//create car
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const car = {
+            matricula: matricula,
+            marca: selectedMarca,
+            tipo: selectedTipo,
+            ano: selectedAno,
+            modelo: modelo,
+            cor: cor,
+            sobre: sobre,
+            preco: preco,
+        };
+        console.log(car);
+        axios.post('http://localhost:4000/api/cars/createCar', car)
+
+            .then((res) => {
+
+                console.log(res.data);
+                navigate("/admin/Admin_create_car");
+                alert("Car created successfully");
+                console.log(car);
+            })
+            .catch((err) => {
+                setErrorMessage(err.response.data.message);
+                alert("Error creating car");
+                console.log(car);
+            });
+    };
 
 
 
@@ -148,7 +177,7 @@ name='tipo'
  onChange={e => setSelectedTipo(e.target.value)}
 >
  {typeCars.map((typeCar, index) => (
- <MenuItem value={typeCar.description} key={index}>
+ <MenuItem value={typeCar.id} key={index}>
    <em>{typeCar.description}</em>
  </MenuItem>
  ))}
@@ -194,7 +223,7 @@ name='tipo'
     backgroundColor: '#000',
 }}
 
-variant="contained">
+variant="contained" onClick={{handleSubmit}}>
     Create Car</Button>
 
 </Box>

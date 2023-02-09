@@ -39,6 +39,20 @@ export default function Homepage() {
     const [rents, setRents] = useState([]);
 
   
+//delete rent
+    const deleteRent = async (id) => {
+      await fetch(`http://localhost:4000/api/rent/deleteRent/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+
+       });
+
+
+
+    };
+
 
    
 
@@ -53,7 +67,7 @@ export default function Homepage() {
     <>
     <Navbar />
 
-    <Container>
+    <Container sx={{marginTop:'7%'}}>
 
     <Grid container spacing={5}>
     {rents.map((rent, index) => (
@@ -85,16 +99,20 @@ export default function Homepage() {
             </Typography>
 
           </CardContent>
-
+          <CardActions>
+            <Button size="small" onClick={deleteRent(rent.id)} >Delete</Button>
+          </CardActions>
         </Card>
     </Grid>
 
-        
-        ))}
+
+         ))}
     </Grid>   
 
 
     </Container>
     </>
   );
+
 }
+

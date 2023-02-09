@@ -63,7 +63,7 @@ export default function Login() {
     <Typography variant="h4" component="div" gutterBottom>
         Delete Car
     </Typography>
-    <TextField onChange={(e) => setIdUser(e.target.value)} name='Id' id="standard-basic" label="Id do Utilizador" variant="standard" sx={{
+    <TextField onChange={(e) => setIdUser(e.target.value)} name='Id' id="standard-basic" label="Id do carro" variant="standard" sx={{
         position: 'relative',
         width: '80%',
         marginTop: '10%',
