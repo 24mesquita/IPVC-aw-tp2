@@ -35,7 +35,6 @@ const RentModel = dbInstance.define(
 );
 UserModel.hasMany(RentModel, { foreignKey: 'id_user' });
 RentModel.belongsTo(UserModel, { foreignKey: 'id_user' });
-
 RentModel.belongsTo(CarsModel, { foreignKey: 'id_car', targetKey: 'id' });
 
 export { RentModel };

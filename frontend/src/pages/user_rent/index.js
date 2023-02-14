@@ -99,9 +99,7 @@ export default function Homepage() {
             </Typography>
 
           </CardContent>
-          <CardActions>
-            <Button size="small" onClick={deleteRent(rent.id)} >Delete</Button>
-          </CardActions>
+
         </Card>
     </Grid>
 

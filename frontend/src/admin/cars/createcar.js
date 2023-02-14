@@ -62,7 +62,6 @@ export default function Create_car() {
         };
         console.log(car);
         axios.post('http://localhost:4000/api/cars/createCar', car)
-
             .then((res) => {
 
                 console.log(res.data);
